@@ -1,0 +1,10 @@
+pkgname=zenity-fake
+pkgver=0.0.1
+pkgrel=1
+provides=(zenity)
+arch=('x86_64')
+options=(!strip)
+package () {
+    mkdir -p "${pkgdir}/usr/bin"
+    ln -s /bin/true "${pkgdir}/usr/bin/zenity"
+}

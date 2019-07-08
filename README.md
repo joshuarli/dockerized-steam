@@ -17,3 +17,10 @@ example invocation (e.g. assumes host is running X, pulseaudio, and some particu
         -e PULSE_SERVER="unix:$XDG_RUNTIME_DIR/pulse/native" \
         -e DISPLAY=$DISPLAY \
         steam-container
+
+
+## technical details
+
+this image fakes the zenity package, avoiding ~400 MB of gtk dependencies that aren't needed.
+
+if you click on the x to exit the steam client, you'll need to manually kill the docker process. however, if you exit via Steam > Exit, it is clean.
