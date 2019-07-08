@@ -28,10 +28,10 @@ RUN useradd --system --create-home builder && \
 
 USER builder
 COPY zenity-fake /tmp/zenity-fake
-WORKDIR /tmp/zenity-fake
-RUN sudo chown -R builder:builder .
-RUN PKGEXT=".pkg.tar" makepkg -cs --noconfirm
-RUN sudo pacman --noconfirm -U *.pkg.tar
+RUN cd /tmp/zenity-fake && \
+    sudo chown -R builder:builder . && \
+    PKGEXT=".pkg.tar" makepkg -cs --noconfirm && \
+    sudo pacman --noconfirm -U *.pkg.tar
 
 # low hanging fruit to save more space: ttf-liberation for ttf-font
 RUN sudo sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//' /etc/pacman.conf && \
@@ -49,13 +49,12 @@ RUN rm -rf \
         /usr/share/locale \
         /usr/share/man \
         /usr/share/terminfo \
-        /usr/share/zoneinfo && \
+        /usr/share/zoneinfo \
+        /tmp/zenity-fake && \
+    sudo userdel -r builder && \
     sudo pacman --noconfirm -Rs sudo fakeroot
 
-RUN echo 'steam ALL = NOPASSWD: ALL' >> /etc/sudoers && \
-    useradd steam
-
+RUN useradd steam
 USER steam
 ENV HOME /home/steam
-
 CMD steam
