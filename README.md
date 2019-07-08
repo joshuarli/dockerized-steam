@@ -8,15 +8,22 @@ build
 
 example invocation (e.g. assumes host is running X, pulseaudio, and some particular device configuration)
 
+    mkdir "${PWD}/steam-data"
     docker run --rm \
-        -v "${PWD}"/data:/home/steam \
+        -v "${PWD}/steam-data:/home/steam" \
         -v /dev/shm:/dev/shm \
-        -v /dev/dri:/dev/dri \
         -v /tmp/.X11-unix:/tmp/.X11-unix \
-        -v "${XDG_RUNTIME_DIR}/pulse:"${XDG_RUNTIME_DIR}"/pulse" \
-        -e PULSE_SERVER="unix:$XDG_RUNTIME_DIR/pulse/native" \
-        -e DISPLAY=$DISPLAY \
+        -e DISPLAY="$DISPLAY" \
+        -v /dev/dri:/dev/dri \
+        -v "${XDG_RUNTIME_DIR}/pulse:${XDG_RUNTIME_DIR}/pulse" \
+        -e PULSE_SERVER="unix:${XDG_RUNTIME_DIR}/pulse/native" \
         steam-container
+
+this invocation carries a few assumptions (tweak for your own machine):
+
+- you have a tmpfs mounted at `/dev/shm`; steam requires this
+- host machine is running X and pulseaudio, with some conventions regarding devices and ipc
+    - if you haven't already, add yourself to the X acl: `xhost +SI:localuser:$(whoami)`
 
 
 ## technical details
