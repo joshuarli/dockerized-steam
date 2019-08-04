@@ -39,7 +39,7 @@ RUN sudo sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//'
 
 # used by steam.sh
 USER root
-RUN pacman --noconfirm -S util-linux file gawk diffutils pciutils
+RUN pacman --noconfirm -S util-linux file gawk diffutils pciutils tar
 
 # cleanup
 RUN rm -rf \
